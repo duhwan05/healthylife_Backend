@@ -13,8 +13,11 @@ class VideoUploadView(APIView):
     def post(self, request, format=None):
         serializer = VideoUploadSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            result_data = serializer.save()
-            return Response(result_data, status=status.HTTP_201_CREATED)
+          
+            response_data = serializer.save()
+
+            return Response(response_data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # 영상 리스트 조회 (자신의 것만)
