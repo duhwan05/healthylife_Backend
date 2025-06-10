@@ -49,6 +49,9 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True    #모든 도메인 요청 허용
 CORS_ALLOW_CREDENTIALS = True   #쿠기,인증정보(예: 세션, JWT 토큰) 등 포함할수 있게 허용
 
+DEBUG = False
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '13.125.241.160']
+
 # 지피티
 OPENAI_API_KEY = config("OPENAI_API_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
