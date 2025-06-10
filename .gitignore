@@ -1,0 +1,54 @@
+# ❗ 비밀 설정 파일
+.env
+*.sqlite3
+
+# 💻 파이썬 캐시파일
+__pycache__/
+*.py[cod]
+*.log
+
+# 🧪 테스트
+*.log
+
+# 🐘 Django 마이그레이션 임시파일
+*.pot
+*.pyc
+*.pyo
+
+# 📦 가상환경
+env/
+venv/
+healthylife_env/
+healthylife/
+healthylife_workspace/
+Lib/
+# 🧠 IDE 설정
+.vscode/
+.idea/
+
+# 📓 주피터
+*.ipynb_checkpoints
+
+# 🖥 운영체제 임시파일
+.DS_Store
+Thumbs.db
+
+# 🌐 Node.js/프론트
+node_modules/
+dist/
+.build/
+.next/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 📦 대용량 바이너리/모델
+*.onnx
+*.pkl
+*.h5
+*.pt
+*.pb
+*.dll
+*.so
+*.whl
+*.exe
