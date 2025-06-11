@@ -1,38 +1,15 @@
 import cv2
-
-# 관절을 연결할 인덱스 쌍 (MediaPipe 33개 기준)
-POSE_CONNECTIONS = [
-    (11, 13), (13, 15),    # 왼쪽 팔
-    (12, 14), (14, 16),    # 오른쪽 팔
-    (11, 12),              # 어깨 연결
-    (23, 24),              # 엉덩이 연결
-    (11, 23), (12, 24),    # 몸통 연결
-    (23, 25), (25, 27),    # 왼쪽 다리
-    (24, 26), (26, 28),    # 오른쪽 다리
-    (27, 29), (28, 30),    # 무릎 아래
-    (29, 31), (30, 32)     # 발끝
-]
+from analysis.pose_constants import JOINT_NAMES, POSE_CONNECTIONS, ABSTRACT_JOINT_MAP
 
 def overlay_pose_and_save(input_path, output_path, posepoints_dict, problem_joint_names=None):
-    # MediaPipe의 관절 인덱스와 명칭 매핑
-    JOINT_NAMES = [
-        "nose", "left_eye_inner", "left_eye", "left_eye_outer",
-        "right_eye_inner", "right_eye", "right_eye_outer",
-        "left_ear", "right_ear",
-        "mouth_left", "mouth_right",
-        "left_shoulder", "right_shoulder",
-        "left_elbow", "right_elbow",
-        "left_wrist", "right_wrist",
-        "left_pinky", "right_pinky", "left_index", "right_index",
-        "left_thumb", "right_thumb",
-        "left_hip", "right_hip",
-        "left_knee", "right_knee",
-        "left_ankle", "right_ankle",
-        "left_heel", "right_heel",
-        "left_foot_index", "right_foot_index"
-    ]
-
+    # 문제 관절 확장
     problem_joint_names = problem_joint_names or []
+    expanded_problem_joints = set()
+    for name in problem_joint_names:
+        if name in ABSTRACT_JOINT_MAP:
+            expanded_problem_joints.update(ABSTRACT_JOINT_MAP[name])
+        else:
+            expanded_problem_joints.add(name)
 
     cap = cv2.VideoCapture(input_path)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -59,10 +36,10 @@ def overlay_pose_and_save(input_path, output_path, posepoints_dict, problem_join
                 y = int(pt['y'] * height)
                 joint_name = JOINT_NAMES[idx] if idx < len(JOINT_NAMES) else None
 
-                if joint_name in problem_joint_names:
-                    color = (0, 0, 255)  # 🔴 빨간색 (문제 관절)
+                if joint_name in expanded_problem_joints:
+                    color = (0, 0, 255)  # 🔴 문제 관절
                 else:
-                    color = (0, 255, 0)  # 🟢 초록색 (정상 관절)
+                    color = (0, 255, 0)  # 🟢 정상 관절
 
                 cv2.circle(frame, (x, y), 5, color, -1)
 

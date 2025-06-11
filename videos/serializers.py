@@ -54,7 +54,7 @@ class VideoUploadSerializer(serializers.ModelSerializer):
             "id": video.id,
             "exercise_name": video.exercise_name,
             "body_part": video.body_part,
-            "video_url": result["video_url"],
+            "video_url": video.video_file.url,
             "uploaded_at": video.uploaded_at,
             "analysis": result,
         }

@@ -8,6 +8,7 @@ from .models import AnalysisResult, PosePoint
 from videos.utils import overlay_pose_and_save
 from django.core.files import File
 import tempfile, os
+from .pose_constants import ABSTRACT_JOINT_TRANSLATIONS
 
 
 def analyze_video(video_path, video_instance, exercise_name, body_part):
@@ -96,10 +97,13 @@ def analyze_video(video_path, video_instance, exercise_name, body_part):
     os.remove(tmp_out_path)
     os.remove(video_path)
 
+    problem_joints_kor = [
+        ABSTRACT_JOINT_TRANSLATIONS.get(j, j) for j in problem_joints
+    ]
+
     # ✅ 최종 결과 반환
     return {
         "score": gpt_result["score"],
         "feedback": gpt_result["feedback"],
-        "video_url": video_instance.video_file.url,
-        "problem_joints": problem_joints
+        "problem_joints": problem_joints_kor
     }

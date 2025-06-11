@@ -4,7 +4,6 @@ from django.utils import timezone
 
 # 🔧 사용자 생성을 위한 커스텀 매니저 클래스
 class UserManager(BaseUserManager):
-    # 일반 사용자 생성 메서드
     def create_user(self, email, username, password=None, **extra_fields):
         if not email:
             raise ValueError("이메일은 필수입니다.")  # 이메일 필수 입력 체크
@@ -13,12 +12,6 @@ class UserManager(BaseUserManager):
         user.set_password(password)  # 비밀번호 해싱 저장
         user.save(using=self._db)  # DB에 저장
         return user
-
-    # 슈퍼유저 생성 메서드 (createsuperuser 명령어에서 사용됨)
-    def create_superuser(self, email, username, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", True)  # 관리자 권한 부여
-        extra_fields.setdefault("is_superuser", True)  # 슈퍼유저 권한 부여
-        return self.create_user(email, username, password, **extra_fields)  # 일반 사용자 생성 로직 재사용
 
 # 사용자 모델 클래스 (기본 인증 User 모델 대체)
 class User(AbstractBaseUser, PermissionsMixin):
