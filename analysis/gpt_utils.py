@@ -34,7 +34,7 @@ def generate_feedback_from_keypoints(summary_text: str, exercise_name: str, body
 
     이 정보를 바탕으로 다음 JSON 형식으로 분석 결과를 생성하세요:
 
-    1. "feedback": 문제점을 설명하고, 어떤 관절/부위에 개선이 필요한지 알려주는 간단하고 친절한 문장 (2문장 이하)
+    1. "feedback": 문제점을 설명하고, 어떤 관절/부위에 개선이 필요한지 알려주고 올바른 자세까지 설명 (4문장 이하)
     2. "score": 전체 자세에 대해 0~100 사이의 정수 점수 표출, 문제 프레임 있을때마다 5점씩 차감
     3. "problem_joints": 문제가 있는 관절 이름을 리스트로 (MediaPipe 명칭 기준: "left_knee", "right_shoulder" 등)
 

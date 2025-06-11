@@ -21,21 +21,36 @@ class VideoUploadSerializer(serializers.ModelSerializer):
 
     # ✅ 길이 제한 검사 (20초 이하)
     def validate_video_file(self, file):
-        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.name)[1]) as temp_file:
-            for chunk in file.chunks():
-                temp_file.write(chunk)
-            temp_path = temp_file.name
+        from moviepy.editor import VideoFileClip
+        import tempfile, os
 
-        try:
-            clip = VideoFileClip(temp_path)
-            if clip.duration > 20:
-                raise serializers.ValidationError("20초 이하의 영상만 업로드할 수 있습니다.")
-            clip.close()
-        except Exception:
-            raise serializers.ValidationError("영상 파일을 분석할 수 없습니다.")
-        finally:
-            os.remove(temp_path)
+        # 1. 임시 폴더 생성
+        with tempfile.TemporaryDirectory() as tmpdir:
+            temp_path = os.path.join(tmpdir, file.name)
+
+            # 2. 업로드 파일 저장
+            with open(temp_path, 'wb') as f:
+                for chunk in file.chunks():
+                    f.write(chunk)
+
+            # 3. 영상 열어서 분석
+            try:
+                clip = VideoFileClip(temp_path)
+                if clip.duration > 20:
+                    raise serializers.ValidationError("20초 이하의 영상만 업로드할 수 있습니다.")
+            except Exception:
+                raise serializers.ValidationError("영상 파일을 분석할 수 없습니다.")
+            finally:
+                try:
+                    clip.reader.close()
+                    if clip.audio:
+                        clip.audio.reader.close_proc()
+                except Exception:
+                    pass  # 리소스 정리 실패는 무시
+
+        # 4. 모든 리소스 자동 삭제됨
         return file
+
 
     def create(self, validated_data):
         user = self.context['request'].user
