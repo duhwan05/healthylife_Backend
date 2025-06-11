@@ -16,7 +16,7 @@ class Video(models.Model):
         on_delete=models.CASCADE,
         related_name='videos'
     )
-    video_file = models.FileField(upload_to='videos/')
+    video_file = models.FileField(upload_to='analysis_videos/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
     
     exercise_name = models.CharField(

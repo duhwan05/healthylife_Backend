@@ -5,7 +5,6 @@ from .models import Video
 from .serializers import VideoUploadSerializer
 from rest_framework.generics import ListAPIView
 from .serializers import VideoUploadSerializer
-
 # 영상 업로드
 class VideoUploadView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -13,9 +12,7 @@ class VideoUploadView(APIView):
     def post(self, request, format=None):
         serializer = VideoUploadSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-          
             response_data = serializer.save()
-
             return Response(response_data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
