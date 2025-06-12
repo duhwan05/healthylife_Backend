@@ -22,7 +22,6 @@ def upload_file_to_s3(local_path, folder='analysis_videos'):
             settings.AWS_STORAGE_BUCKET_NAME,
             filename,
             ExtraArgs={
-                'ACL': 'public-read',
                 'ContentType': content_type
             }
         )
