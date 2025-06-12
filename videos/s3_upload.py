@@ -1,3 +1,8 @@
+import boto3
+import os
+from django.conf import settings
+from uuid import uuid4
+
 def upload_file_to_s3(local_path, folder='analysis_videos'):
     ext = os.path.splitext(local_path)[-1]
     filename = f"{folder}/{uuid4().hex}{ext}"
