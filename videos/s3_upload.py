@@ -1,8 +1,3 @@
-import boto3
-import os
-from django.conf import settings
-from uuid import uuid4
-
 def upload_file_to_s3(local_path, folder='analysis_videos'):
     ext = os.path.splitext(local_path)[-1]
     filename = f"{folder}/{uuid4().hex}{ext}"
@@ -13,10 +8,19 @@ def upload_file_to_s3(local_path, folder='analysis_videos'):
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
         region_name=settings.AWS_S3_REGION_NAME,
     )
-    
-    print(s3.list_buckets())
+
+    content_type = 'video/mp4' if 'video' in folder else 'image/jpeg'
+
     with open(local_path, 'rb') as f:
-        s3.upload_fileobj(f, settings.AWS_STORAGE_BUCKET_NAME, filename)
+        s3.upload_fileobj(
+            f,
+            settings.AWS_STORAGE_BUCKET_NAME,
+            filename,
+            ExtraArgs={
+                'ACL': 'public-read',
+                'ContentType': content_type
+            }
+        )
 
     url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.{settings.AWS_S3_REGION_NAME}.amazonaws.com/{filename}"
     return url
